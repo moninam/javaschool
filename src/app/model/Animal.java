@@ -1,12 +1,23 @@
-package model;
+package app.model;
 
 public class Animal {
+    private int id;
     private String name;
     private String breed;
+
+    public Animal(){}
 
     public Animal(String name, String breed) {
         this.name = name;
         this.breed = breed;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

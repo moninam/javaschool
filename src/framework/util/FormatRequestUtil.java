@@ -1,6 +1,8 @@
-package util;
+package framework.util;
 
-import model.Animal;
+import app.model.Animal;
+
+import java.net.URL;
 
 public class FormatRequestUtil {
     public static int parsePath(String path){
@@ -17,6 +19,17 @@ public class FormatRequestUtil {
             }
         }
         return -1;
+    }
+    public static String getPath(String path){
+        String start = "/";
+        if(path != null){
+            String paths[] = path.split("[/]");
+            if(paths.length > 1){
+                start+=paths[2];
+                return start;
+            }
+        }
+        return null;
     }
     public static Animal parseBody(String query){
         Animal animal = null;
