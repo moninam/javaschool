@@ -7,7 +7,7 @@ import app.respository.AnimalRepository;
 import java.io.*;
 
 public class Handlers {
-    public static AnimalRepository animalRepository = new AnimalRepository();
+
 
     public static class RootHandler implements HttpHandler{
         @Override
@@ -26,16 +26,16 @@ public class Handlers {
         public void handle(HttpExchange exchange) throws IOException {
             switch (exchange.getRequestMethod()){
                 case "GET":
-                    ServerOperations.handleGet(exchange);
+                    ServerOperations.getOperation(exchange);
                     break;
                 case "POST":
-                    ServerOperations.handlePost(exchange);
+                    ServerOperations.postOperation(exchange);
                     break;
                 case "PUT":
-                    ServerOperations.handlePut(exchange);
+                    ServerOperations.putOperation(exchange);
                     break;
                 case "DELETE":
-                    ServerOperations.handleDelete(exchange);
+                    ServerOperations.deleteOperation(exchange);
                     break;
             }
         }

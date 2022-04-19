@@ -1,8 +1,16 @@
 package app.model;
 
+import framework.annotation.Entity;
+import framework.annotation.Field;
+import framework.annotation.JsonIgnore;
+
+@Entity
 public class Animal {
+    @JsonIgnore
     private int id;
+    @Field(name="Nombre")
     private String name;
+    @Field(name="Raza")
     private String breed;
 
     public Animal(){}
@@ -38,7 +46,7 @@ public class Animal {
 
     @Override
     public String toString() {
-        return "name='" + name + '\'' +
-                ", breed='" + breed + '\'';
+        return "Name: " + name + '\'' +
+                ", Breed: '" + breed + '\'';
     }
 }

@@ -5,20 +5,22 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import framework.context.ApplicationContext;
 
 public class HttpServerConfig {
     private HttpServer server;
 
-    public void start(int port,Class<?> clase){
+    public void start(int port,Class<?> clazz){
         //Configure Context
-        configure(clase);
+        configure(clazz);
         try{
             server = HttpServer.create(new InetSocketAddress(port),0);
-            server.createContext("/",new Handlers.RootHandler());
-            HashMap<String,Class> endpoints = ServerConfiguration.getInstance().getClases();
+            server.createContext("/", ApplicationContext.getBean(HttpHandler.class));
+            Map<String,Class<?>> endpoints = ServerConfiguration.getInstance().getClazzes();
 
-            for (Map.Entry<String, Class> set : endpoints.entrySet()) {
+            for (Map.Entry<String, Class<?>> set : endpoints.entrySet()) {
                 server.createContext(set.getKey(),new Handlers.RestlHandler());
             }
             server.setExecutor(null);
@@ -31,7 +33,7 @@ public class HttpServerConfig {
         server.stop(0);
         System.out.println("Server stopped");
     }
-    private void configure(Class<?> clase){
-        ServerConfiguration.getInstance().configureClasses(clase);
+    private void configure(Class<?> clazz){
+        ServerConfiguration.getInstance().configureClasses(clazz);
     }
 }

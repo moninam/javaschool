@@ -2,6 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>JavaSchool</groupId>
     <artifactId>http-server</artifactId>
+    <packaging>pom</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <build>
         <sourceDirectory>src</sourceDirectory>
@@ -16,6 +17,10 @@
             </plugin>
         </plugins>
     </build>
+    <modules>
+        <module>app</module>
+        <module>framework</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>com.sun.net.httpserver</groupId>

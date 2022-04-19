@@ -1,17 +1,19 @@
 package framework.server;
 
-import framework.controller.Autowire;
-import framework.controller.RestController;
+import framework.annotation.Autowire;
+import framework.annotation.RestController;
 import framework.util.ClassUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class ServerConfiguration {
     private static ServerConfiguration instance;
 
-    private HashMap<String,Class> clases;
+
+    private final Map<String,Class<?>> clazzes = new HashMap<>();
 
     public static ServerConfiguration getInstance(){
         if(instance == null){
@@ -20,14 +22,15 @@ public class ServerConfiguration {
         return instance;
     }
     private ServerConfiguration(){
-        clases = new HashMap<>();
+
     }
 
 
-    public HashMap<String, Class> getClases(){
-        return clases;
+    public Map<String, Class<?>> getClazzes(){
+        return Collections.unmodifiableMap(clazzes);
     }
 
+    //TODO: Change all Spanish words to english
     public void configureClasses(Class<?> clase){
         Package pack = clase.getPackage();
         String packageName = pack.getName();
@@ -35,20 +38,21 @@ public class ServerConfiguration {
         List<String> packageNames = ClassUtil.getInstance().findAllPackages(packageName);
 
         for(String item: packageNames){
-            Set<Class> lista =ClassUtil.getInstance().findAllClassesUsingClassLoader(item);
-            Iterator<Class> namesIterator = lista.iterator();
+            Set<Class<?>> lista = ClassUtil.getInstance().findAllClassesUsingClassLoader(item);
+            Iterator<Class<?>> namesIterator = lista.iterator();
             while(namesIterator.hasNext()) {
-               Class it = namesIterator.next();
+               Class<?> it = namesIterator.next();
                RestController controller = (RestController) it.getAnnotation(RestController.class);
                if(controller != null){
                    String path = controller.value();
-                   clases.put(path,it);
+                   clazzes.put(path,it);
                }
             }
         }
 
     }
 
+    // TODO: Fix Class Convention
     public Object injectDependencies(Object obj){
         Class clase = obj.getClass();
         Field[] fields = clase.getDeclaredFields();
@@ -68,6 +72,17 @@ public class ServerConfiguration {
             }
         }
         return obj;
+    }
+
+    public ArrayList<Method> getMethodByAnnotation(Class clase,Class annotation){
+        Method[] allMethods = clase.getDeclaredMethods();
+        ArrayList<Method> methods = new ArrayList<>();
+        for(Method item: allMethods){
+            if(item.isAnnotationPresent(annotation)){
+                methods.add(item);
+            }
+        }
+        return methods;
     }
 
 }

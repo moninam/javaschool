@@ -20,7 +20,7 @@ public class ClassUtil {
         }
         return instance;
     }
-    public Set<Class> findAllClassesUsingClassLoader(String packageName) {
+    public Set<Class<?>> findAllClassesUsingClassLoader(String packageName) {
         InputStream stream = ClassLoader.getSystemClassLoader()
                 .getResourceAsStream(packageName.replaceAll("[.]", "/"));
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
@@ -30,7 +30,7 @@ public class ClassUtil {
                 .collect(Collectors.toSet());
     }
     public List<String> findAllPackages(String packageName){
-        InputStream stream = ClassLoader.getSystemClassLoader()
+        InputStream stream = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(packageName.replaceAll("[.]", "/"));
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         List<String> temp = reader.lines()

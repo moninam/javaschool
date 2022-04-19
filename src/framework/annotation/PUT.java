@@ -1,4 +1,4 @@
-package framework.controller;
+package framework.annotation;
 
 public @interface PUT {
     String value();

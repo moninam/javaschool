@@ -2,7 +2,7 @@ package app.controller;
 
 import app.model.Animal;
 import app.respository.AnimalRepository;
-import framework.controller.*;
+import framework.annotation.*;
 
 import java.util.List;
 @RestController("/animals")
