@@ -3,3 +3,4 @@ javaschool.iml
 .idea
 target
 *.iml
+.DS_Store
