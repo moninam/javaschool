@@ -1,4 +1,4 @@
-package main.java.util;
+package main.java.context;
 
 
 import java.io.BufferedReader;
@@ -10,17 +10,19 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
-public class ClassUtil {
-    private static ClassUtil instance;
+//TODO: Move the class obtention and package to context module
+public class ClassFinder {
+    private static ClassFinder instance;
 
-    private  ClassUtil(){}
+    private ClassFinder(){}
 
-    public static ClassUtil getInstance(){
+    public static ClassFinder getInstance(){
         if(instance == null){
-            instance = new ClassUtil();
+            instance = new ClassFinder();
         }
         return instance;
     }
+
     public Set findAllClassesUsingClassLoader(String packageName) {
         InputStream stream = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(packageName.replaceAll("[.]", "/"));

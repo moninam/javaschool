@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import main.java.context.ApplicationContext;
 
 
 public class HttpServerConfig {
@@ -17,9 +15,11 @@ public class HttpServerConfig {
         configure(clazz);
         try{
             server = HttpServer.create(new InetSocketAddress(port),0);
+            //TODO: Create the context with the Bean loaded previosly
             //server.createContext("/", ApplicationContext.getBean(HttpHandler.class));
             Map<String,Class<?>> endpoints = ServerConfiguration.getInstance().getClazzes();
 
+            //TODO: Remove that part of code because we load the bean defined
             for (Map.Entry<String, Class<?>> set : endpoints.entrySet()) {
                 server.createContext(set.getKey(),new Handlers.RestlHandler());
             }
@@ -34,6 +34,9 @@ public class HttpServerConfig {
         System.out.println("Server stopped");
     }
     private void configure(Class<?> clazz){
+        //TODO: Load package By Annotation
+        //TODO: Load components
+        // TODO: Load Contollers
         ServerConfiguration.getInstance().configureClasses(clazz);
     }
 }

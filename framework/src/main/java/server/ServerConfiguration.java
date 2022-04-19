@@ -2,13 +2,14 @@ package main.java.server;
 
 import main.java.annotation.Autowire;
 import main.java.annotation.RestController;
-import main.java.util.ClassUtil;
+import main.java.context.ClassFinder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
+//TODO: Move the logic of this part to Application Context
 public class ServerConfiguration {
     private static ServerConfiguration instance;
 
@@ -35,10 +36,10 @@ public class ServerConfiguration {
         Package pack = clase.getPackage();
         String packageName = pack.getName();
 
-        List<String> packageNames = ClassUtil.getInstance().findAllPackages(packageName);
+        List<String> packageNames = ClassFinder.getInstance().findAllPackages(packageName);
 
         for(String item: packageNames){
-            Set<Class<?>> lista = ClassUtil.getInstance().findAllClassesUsingClassLoader(item);
+            Set<Class<?>> lista = ClassFinder.getInstance().findAllClassesUsingClassLoader(item);
             Iterator<Class<?>> namesIterator = lista.iterator();
             while(namesIterator.hasNext()) {
                 Class<?> it = namesIterator.next();
@@ -54,18 +55,17 @@ public class ServerConfiguration {
 
     // TODO: Fix Class Convention
     public Object injectDependencies(Object obj){
-        Class clase = obj.getClass();
-        Field[] fields = clase.getDeclaredFields();
-        for(int i = 0; i < fields.length ; i++){
-            Autowire tag = fields[i].getAnnotation(Autowire.class);
-            if(tag != null){
-                fields[i].setAccessible(true);
-                Class fieldClass = fields[i].getType();
-                //We need to create a new instance and asign to our class
+        Class<?> clazz = obj.getClass();
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            Autowire tag = field.getAnnotation(Autowire.class);
+            if (tag != null) {
+                field.setAccessible(true);
+                Class fieldClass = field.getType();
                 try {
                     Constructor<?> cons = fieldClass.getConstructor();
                     Object objField = cons.newInstance();
-                    fields[i].set(obj,objField);
+                    field.set(obj, objField);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -74,7 +74,7 @@ public class ServerConfiguration {
         return obj;
     }
 
-    public ArrayList<Method> getMethodByAnnotation(Class clase, Class annotation){
+    public ArrayList<Method> getMethodByAnnotation(Class<?> clase, Class annotation){
         Method[] allMethods = clase.getDeclaredMethods();
         ArrayList<Method> methods = new ArrayList<>();
         for(Method item: allMethods){

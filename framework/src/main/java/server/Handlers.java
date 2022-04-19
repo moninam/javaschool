@@ -6,6 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.*;
 
+//TODO: Move the logic of this class to our file REST Handler
 public class Handlers {
 
 
