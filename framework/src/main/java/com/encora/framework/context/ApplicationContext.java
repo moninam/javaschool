@@ -1,11 +1,11 @@
 package com.encora.framework.context;
 
 import com.encora.framework.annotation.Autowire;
-import com.encora.framework.annotation.Component;
 import com.encora.framework.annotation.RestController;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public final class ApplicationContext {
@@ -58,6 +58,16 @@ public final class ApplicationContext {
         }
         return obj;
     }
+    public static List<Method> getMethodByAnnotation(Class<?> clase, Class annotation){
+        Method[] allMethods = clase.getDeclaredMethods();
+        ArrayList<Method> methods = new ArrayList<>();
+        for(Method item: allMethods){
+            if(item.isAnnotationPresent(annotation)){
+                methods.add(item);
+            }
+        }
+        return methods;
+    }
 
     public static <T> T getBean(Class<?> clazz){
         return (T)beans.get(clazz);
@@ -66,8 +76,6 @@ public final class ApplicationContext {
     public static Class<?> getController(String path){
         return controllers.get(path);
     }
-    public Map<String, Class<?>> getControllers(){
-        return Collections.unmodifiableMap(controllers);
-    }
+
 
 }

@@ -33,7 +33,7 @@ public class ServerOperations {
                 Object obj = cons.newInstance();
                 //Inject dependencies
                 obj = ApplicationContext.injectDependencies(obj);
-                ArrayList<Method> methods = ServerConfiguration.getInstance().getMethodByAnnotation(classItem, GET.class);
+                List<Method> methods = ApplicationContext.getMethodByAnnotation(classItem, GET.class);
                 Method method = null;
 
                 for (int i = 0; i < methods.size(); i++) {

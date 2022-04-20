@@ -2,7 +2,6 @@ package com.encora.framework.server;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.encora.framework.annotation.Component;
 
 import java.io.IOException;
 

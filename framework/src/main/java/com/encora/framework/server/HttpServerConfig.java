@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 
 import com.encora.framework.annotation.App;
 import com.encora.framework.exception.ServerErrorException;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.encora.framework.context.ApplicationContext;
 

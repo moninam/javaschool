@@ -1,7 +1,5 @@
 package com.encora.framework;
 
-import com.encora.framework.annotation.App;
-import com.encora.framework.context.ApplicationContext;
 import com.encora.framework.server.HttpServerConfig;
 
 public class Framework {
