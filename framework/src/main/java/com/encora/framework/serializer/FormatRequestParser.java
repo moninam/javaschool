@@ -1,4 +1,4 @@
-package com.encora.framework.util;
+package com.encora.framework.serializer;
 
 import com.encora.framework.annotation.Column;
 import com.encora.framework.annotation.JsonIgnore;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //TODO: Create the com.encora.framework.serializer class for JSON inputs
-public class FormatRequestUtil {
+public class FormatRequestParser {
     public static int parsePath(String path){
         if(path != null){
             String paths[] = path.split("[/]");

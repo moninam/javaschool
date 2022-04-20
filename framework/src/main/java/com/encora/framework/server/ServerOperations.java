@@ -1,8 +1,9 @@
 package com.encora.framework.server;
 
+import com.encora.framework.context.ApplicationContext;
 import com.sun.net.httpserver.HttpExchange;
 import com.encora.framework.annotation.GET;
-import com.encora.framework.util.FormatRequestUtil;
+import com.encora.framework.serializer.FormatRequestParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,16 +23,16 @@ public class ServerOperations {
         String response = "";
         URI requestedUri = he.getRequestURI();
         String path = requestedUri.getPath();
-        String root = FormatRequestUtil.getPath(path);
-        int index = FormatRequestUtil.parsePath(path);
+        String root = FormatRequestParser.getPath(path);
+        int index = FormatRequestParser.parsePath(path);
 
         if (root != null) {
             try {
-                Class classItem = getClassEndpoint(root);
+                Class<?> classItem = getClassEndpoint(root);
                 Constructor<?> cons = classItem.getConstructor();
                 Object obj = cons.newInstance();
                 //Inject dependencies
-                obj = ServerConfiguration.getInstance().injectDependencies(obj);
+                obj = ApplicationContext.injectDependencies(obj);
                 ArrayList<Method> methods = ServerConfiguration.getInstance().getMethodByAnnotation(classItem, GET.class);
                 Method method = null;
 
@@ -111,15 +112,6 @@ public class ServerOperations {
     }
 
     private static Class<?> getClassEndpoint(String endpoint) {
-        Map<String, Class<?>> map = ServerConfiguration.getInstance().getClazzes();
-        if (map != null) {
-            for (Map.Entry<String, Class<?>> set : map.entrySet()) {
-                if (set.getKey().equals(endpoint)) {
-                    return set.getValue();
-                }
-            }
-        }
-
-        return null;
+        return ApplicationContext.getController(endpoint);
     }
 }

@@ -15,35 +15,11 @@ public final class ApplicationContext {
     private final static Map<String,Class<?>> controllers = new HashMap<>();
 
 
-    public static void init(String packageName,Class<?> clazz){
+    public static void init(String packageName){
         loadControllers(packageName);
-        loadBeans(clazz);
     }
 
-    private static void loadBeans(Class<?> clazz) {
-        //TODO: Create the logic to load beans
-        Package pack = clazz.getPackage();
-        String packageName = pack.getName();
-
-        List<String> packageNames = ClassFinder.getInstance().findAllPackages(packageName);
-
-        for(String item: packageNames){
-            Set<Class<?>> lista = ClassFinder.getInstance().findAllClassesUsingClassLoader(item);
-            Iterator<Class<?>> namesIterator = lista.iterator();
-            while(namesIterator.hasNext()) {
-                Class<?> it = namesIterator.next();
-                Component component = (Component) it.getAnnotation(Component.class);
-                if(component != null){
-                    try{
-                        Constructor<?> cons = it.getConstructor();
-                        Object obj= cons.newInstance();
-                        beans.put(it,obj);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
+    private static void loadBeans() {
     }
 
     private static void loadControllers(String packageName) {
@@ -63,7 +39,7 @@ public final class ApplicationContext {
             }
         }
     }
-    public Object injectDependencies(Object obj){
+    public static Object injectDependencies(Object obj){
         Class<?> clazz = obj.getClass();
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
