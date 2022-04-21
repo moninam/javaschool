@@ -3,7 +3,6 @@ package com.encora.framework.context;
 import com.encora.framework.annotation.Autowire;
 import com.encora.framework.annotation.RestController;
 
-import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -20,7 +19,7 @@ public final class ApplicationContext {
 
     public static void init(String packageName){
         loadControllers(packageName);
-        readFile(packageName);
+        readFile();
         loadBeans();
     }
 
@@ -31,7 +30,6 @@ public final class ApplicationContext {
                 Class<?> classItem = set.getValue();
                 Constructor<?> cons =  classItem.getConstructor();
                 Object obj = cons.newInstance();
-                //Inject dependencies
                 obj = ApplicationContext.injectDependencies(obj);
                 beans.put(classItem,obj);
             } catch (NoSuchMethodException e) {
@@ -62,9 +60,9 @@ public final class ApplicationContext {
             }
         }
     }
-    public static void readFile(String packagenName){
+    public static void readFile(){
         try{
-            Map<String,String> values = ClassFinder.getInstance().readFile(packagenName);
+            Map<String,String> values = ClassFinder.getInstance().readFile("application.properties");
             mapValues.putAll(values);
         }catch (Exception e){
             e.printStackTrace();
@@ -78,7 +76,7 @@ public final class ApplicationContext {
             Autowire tag = field.getAnnotation(Autowire.class);
             if (tag != null) {
                 field.setAccessible(true);
-                Class fieldClass = field.getType();
+                Class<?> fieldClass = field.getType();
                 try {
                     Constructor<?> cons = fieldClass.getConstructor();
                     Object objField = cons.newInstance();

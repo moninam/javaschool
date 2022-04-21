@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
-//TODO: Move the class obtention and package to com.encora.framework.context module
+
 public class ClassFinder {
     private static ClassFinder instance;
 
@@ -44,7 +44,7 @@ public class ClassFinder {
         Map<String,String> values = new HashMap<>();
 
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("application.properties").getFile());
+        File file = new File(classLoader.getResource(packagenName).getFile());
         InputStream inputStream = new FileInputStream(file);
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -72,7 +72,7 @@ public class ClassFinder {
             return Class.forName(packageName + "."
                     + className.substring(0, className.lastIndexOf('.')));
         } catch (ClassNotFoundException e) {
-            // handle the com.encora.framework.exception
+           e.printStackTrace();
         }
         return null;
     }

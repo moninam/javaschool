@@ -17,7 +17,6 @@ import java.lang.reflect.Parameter;
 import java.net.URI;
 import java.util.*;
 
-//TODO: Separate the logic of this class and the Application Context class
 public class ServerOperations {
 
 
@@ -89,7 +88,6 @@ public class ServerOperations {
     }
 
     public static void postOperation(HttpExchange he) throws IOException {
-        //Read Post Body
         InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
         BufferedReader br = new BufferedReader(isr);
 
@@ -102,7 +100,7 @@ public class ServerOperations {
         br.close();
         isr.close();
         String bodyJson = buf.toString();
-        //Get the class of the method
+
         URI requestedUri = he.getRequestURI();
         String path = requestedUri.getPath();
         String root = FormatRequestParser.getPath(path);
@@ -138,7 +136,6 @@ public class ServerOperations {
                         method.invoke(obj,bodyRequest);
                         code = 200;
                         response = JSONSerializer.serialize(bodyRequest);
-                        int i = 0;
 
                     }
                 }
@@ -156,7 +153,6 @@ public class ServerOperations {
     }
 
     public static void putOperation(HttpExchange he) throws IOException {
-        //Read Post Body
         InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
         BufferedReader br = new BufferedReader(isr);
 
@@ -169,7 +165,7 @@ public class ServerOperations {
         br.close();
         isr.close();
         String bodyJson = buf.toString();
-        //Get the class of the method
+
         URI requestedUri = he.getRequestURI();
         String path = requestedUri.getPath();
         String root = FormatRequestParser.getPath(path);
@@ -244,7 +240,7 @@ public class ServerOperations {
     }
 
     public static void deleteOperation(HttpExchange he) throws IOException {
-        //Read Post Body
+
         InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
         BufferedReader br = new BufferedReader(isr);
 
@@ -256,8 +252,7 @@ public class ServerOperations {
 
         br.close();
         isr.close();
-        String bodyJson = buf.toString();
-        //Get the class of the method
+
         URI requestedUri = he.getRequestURI();
         String path = requestedUri.getPath();
         String root = FormatRequestParser.getPath(path);

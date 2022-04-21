@@ -41,9 +41,9 @@ public class AnimalRepository {
         animals.add(animal);
         return animal;
     }
-    public Animal editAnimal(Animal anim,int index){
-        String name = anim.getName();
-        String breed = anim.getBreed();
+    public Animal editAnimal(Animal animal,int index){
+        String name = animal.getName();
+        String breed = animal.getBreed();
 
         for(int i = 0; i < animals.size() ; i++){
             if(animals.get(i).getId() == index){
