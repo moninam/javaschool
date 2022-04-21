@@ -5,6 +5,7 @@ import com.encora.framework.annotation.RestController;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -17,9 +18,29 @@ public final class ApplicationContext {
 
     public static void init(String packageName){
         loadControllers(packageName);
+        loadBeans();
     }
 
     private static void loadBeans() {
+        for (Map.Entry<String, Class<?>> set :controllers.entrySet()) {
+
+            try {
+                Class<?> classItem = set.getValue();
+                Constructor<?> cons =  classItem.getConstructor();
+                Object obj = cons.newInstance();
+                //Inject dependencies
+                obj = ApplicationContext.injectDependencies(obj);
+                beans.put(classItem,obj);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static void loadControllers(String packageName) {

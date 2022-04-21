@@ -25,8 +25,8 @@ public class AnimalController {
         repository.addAnimal(animal);
     }
     @PUT("/{id}")
-    public void update(@Body Animal animal){
-        repository.editAnimal(animal, animal.getId());
+    public Animal update(@Body Animal animal, @PathParam("id")int id){
+        return repository.editAnimal(animal, id);
     }
     @DELETE("/{id}")
     public void delete(@PathParam("id") int id){

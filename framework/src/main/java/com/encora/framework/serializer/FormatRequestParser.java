@@ -1,7 +1,5 @@
 package com.encora.framework.serializer;
 
-
-//TODO: Create the com.encora.framework.serializer class for JSON inputs
 public class FormatRequestParser {
     public static int parsePath(String path){
         if(path != null){
@@ -29,6 +27,5 @@ public class FormatRequestParser {
         }
         return null;
     }
-
-
+    
 }
