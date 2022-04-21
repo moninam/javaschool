@@ -29,7 +29,7 @@ public class AnimalController {
         return repository.editAnimal(animal, id);
     }
     @DELETE("/{id}")
-    public void delete(@PathParam("id") int id){
-        repository.removeAnimal(id);
+    public Animal delete(@PathParam("id") int id){
+        return repository.removeAnimal(id);
     }
 }

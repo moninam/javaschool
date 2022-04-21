@@ -222,7 +222,13 @@ public class ServerOperations {
                                 code = 404;
                                 response = "No se encontro el elemento";
                             }
+                        }else{
+                            code = 400;
+                            response = "Error en el formato de la peticion";
                         }
+                    }else{
+                        code = 400;
+                        response = "Error en el formato de la peticion";
                     }
                 }
             }catch (Exception e){
@@ -238,7 +244,84 @@ public class ServerOperations {
     }
 
     public static void deleteOperation(HttpExchange he) throws IOException {
-        // TODO : Implement the logic to the Delete operation
+        //Read Post Body
+        InputStreamReader isr = new InputStreamReader(he.getRequestBody(), "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+
+        int b;
+        StringBuilder buf = new StringBuilder();
+        while ((b = br.read()) != -1) {
+            buf.append((char) b);
+        }
+
+        br.close();
+        isr.close();
+        String bodyJson = buf.toString();
+        //Get the class of the method
+        URI requestedUri = he.getRequestURI();
+        String path = requestedUri.getPath();
+        String root = FormatRequestParser.getPath(path);
+        int index = FormatRequestParser.parsePath(path);
+        String pathParams = "";
+
+        int code = 0;
+        String response = "";
+
+        if (root != null) {
+
+            try {
+                Class<?> classItem = getClassEndpoint(root);
+                Object obj = ApplicationContext.getBean(classItem);
+                List<Method> methods = ApplicationContext.getMethodByAnnotation(classItem, DELETE.class);
+                Method method = null;
+                if(methods.size() == 1){
+                    method = methods.get(0);
+                    DELETE annotation = method.getAnnotation(DELETE.class);
+                    if(annotation != null){
+                        pathParams = annotation.value();
+                    }
+                }
+                if(method != null){
+                    Parameter[] parameters = method.getParameters();
+                    Parameter parameterId = null;
+                    for(int i = 0 ; i < parameters.length ; i++){
+                        if(parameters[i].isAnnotationPresent(PathParam.class)){
+                            parameterId = parameters[i];
+                            break;
+                        }
+                    }
+                    if(parameterId != null){
+                        PathParam paramAnnotation = parameterId.getAnnotation(PathParam.class);
+                        String paramName = paramAnnotation.value();
+                        if(pathParams.contains(paramName) && index != -1){
+                            method.setAccessible(true);
+                            Object responseBody = method.invoke(obj,index);
+                            if(responseBody != null){
+                                code = 200;
+                                response = "El elemento ha sido eliminado con exito";
+                            }else{
+                                code = 404;
+                                response = "No se encontro el elemento";
+                            }
+                        }else{
+                            code = 400;
+                            response = "Error en el formato de la peticion";
+                        }
+                    }else{
+                        code = 400;
+                        response = "Error en el formato de la peticion";
+                    }
+                }
+            }catch (Exception e){
+                code = 500;
+                response = "Error interno del servidor";
+                e.printStackTrace();
+            }
+        }
+        he.sendResponseHeaders(code, response.length());
+        OutputStream os = he.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
     }
 
     private static Class<?> getClassEndpoint(String endpoint) {
