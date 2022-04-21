@@ -15,9 +15,15 @@ public class HttpServerConfig {
     public void start(int port,Class<?> clazz){
 
         try{
+
             configure(clazz);
-            server = HttpServer.create(new InetSocketAddress(port),0);
-            //TODO: Create the com.encora.framework.context with the Bean loaded previosly
+            int portServer = port;
+            try{
+                portServer = Integer.parseInt(ApplicationContext.getFileProperty("port"));
+            }catch (Exception e){
+
+            }
+            server = HttpServer.create(new InetSocketAddress(portServer),0);
             server.createContext("/", new RestHandler());
             server.setExecutor(null);
             server.start();

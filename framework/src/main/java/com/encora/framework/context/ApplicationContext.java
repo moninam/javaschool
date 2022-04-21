@@ -3,6 +3,7 @@ package com.encora.framework.context;
 import com.encora.framework.annotation.Autowire;
 import com.encora.framework.annotation.RestController;
 
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -14,10 +15,12 @@ public final class ApplicationContext {
 
     private final static Map<Class<?>,Object> beans = new HashMap<>();
     private final static Map<String,Class<?>> controllers = new HashMap<>();
+    private final static Map<String,String> mapValues = new HashMap<>();
 
 
     public static void init(String packageName){
         loadControllers(packageName);
+        readFile(packageName);
         loadBeans();
     }
 
@@ -44,7 +47,6 @@ public final class ApplicationContext {
     }
 
     private static void loadControllers(String packageName) {
-        //TODO: Create the logic to load controllers
         List<String> packageNames = ClassFinder.getInstance().findAllPackages(packageName);
 
         for(String item: packageNames){
@@ -59,6 +61,15 @@ public final class ApplicationContext {
                 }
             }
         }
+    }
+    public static void readFile(String packagenName){
+        try{
+            Map<String,String> values = ClassFinder.getInstance().readFile(packagenName);
+            mapValues.putAll(values);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
     public static Object injectDependencies(Object obj){
         Class<?> clazz = obj.getClass();
@@ -88,6 +99,15 @@ public final class ApplicationContext {
             }
         }
         return methods;
+    }
+    public static String getFileProperty(String key){
+        String value = "";
+        for (Map.Entry<String, String> set : mapValues.entrySet()) {
+            if(set.getKey().contains(key)){
+                value = set.getValue();
+            }
+        }
+        return value;
     }
 
     public static <T> T getBean(Class<?> clazz){

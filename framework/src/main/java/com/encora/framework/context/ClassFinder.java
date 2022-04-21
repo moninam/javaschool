@@ -1,11 +1,8 @@
 package com.encora.framework.context;
 
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -43,7 +40,32 @@ public class ClassFinder {
 
         return temp;
     }
+    public final Map<String,String> readFile(String packagenName) throws IOException {
+        Map<String,String> values = new HashMap<>();
 
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("application.properties").getFile());
+        InputStream inputStream = new FileInputStream(file);
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+
+        int b;
+        StringBuilder buf = new StringBuilder();
+        while ((b = br.read()) != -1) {
+            buf.append((char) b);
+        }
+
+        br.close();
+
+        String bodyJson = buf.toString();
+        String[] filelines = bodyJson.split("\n");
+        for(int i = 0; i < filelines.length ; i++){
+            String[] wordsValues = filelines[i].split("=");
+            if(wordsValues.length == 2){
+                values.put(wordsValues[0],wordsValues[1]);
+            }
+        }
+        return Collections.unmodifiableMap(values);
+    }
 
     private Class getClass(String className, String packageName) {
         try {
