@@ -27,10 +27,8 @@ public class HttpServerConfig {
             server.createContext("/", new RestHandler());
             server.setExecutor(null);
             server.start();
-        }catch (IOException exception){
+        }catch (IOException | ServerErrorException exception){
             exception.printStackTrace();
-        }catch (ServerErrorException e){
-            e.printStackTrace();
         }
     }
     public void stop(){
