@@ -30,7 +30,12 @@ public class AnimalRepository {
     }
     public Animal getAnimal(int i){
         if(i >= 0 && i < animals.size()){
-            return animals.get(i);
+            for(Animal item : animals){
+                if(item.getId() == i){
+                    return item;
+                }
+            }
+            return null;
         }
         return null;
     }

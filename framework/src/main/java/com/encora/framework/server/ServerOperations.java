@@ -55,7 +55,7 @@ public class ServerOperations {
                         Object item = method.invoke(obj, index);
                         if (item != null) {
                             code = 200;
-                            response = item.toString();
+                            response = JSONSerializer.serialize(item);
                         } else {
                             code = 404;
                             response = "Elemento no encontrado";
